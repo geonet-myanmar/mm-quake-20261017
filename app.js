@@ -19,8 +19,7 @@ const QUAKE_EVENT = {
   source_name: "Department of Meteorology and Hydrology (DMH), Myanmar",
   source_division: "Seismological Division, Nay Pyi Taw",
   source_contact: "Tel: 067-3411269, Fax: 067-3411253",
-  source_url: "https://www.moezala.gov.mm/",
-  bulletin_image: "moezala.jpg"
+  source_url: "https://www.moezala.gov.mm/"
 };
 
 // Key Settlements & Distances
@@ -287,12 +286,6 @@ class SeismicMapApp {
             <span>Longitude</span>
             <span>${QUAKE_EVENT.lon.toFixed(2)}° E (${QUAKE_EVENT.lon_dms})</span>
           </div>
-        </div>
-
-        <div style="margin-top: 8px;">
-          <a href="${QUAKE_EVENT.bulletin_image}" target="_blank" title="Click to view full DMH announcement graphic">
-            <img src="${QUAKE_EVENT.bulletin_image}" alt="DMH Announcement" style="width: 100%; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); display: block;">
-          </a>
         </div>
 
         <p style="font-size: 10px; color: #94a3b8; margin-top: 6px;">
