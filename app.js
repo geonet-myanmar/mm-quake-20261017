@@ -1,33 +1,39 @@
 /**
  * Myanmar Seismotectonic Web Map
- * Event: Mandalay M4.2 Earthquake (2026-10-17 08:25:52 MMT)
+ * Event: Mandalay M4.0 Earthquake (2026-10-17 08:25:54 MST) - DMH Myanmar
  * Tectonic Dataset: Myanmar_Tectonic_Map_2011.geojson
  */
 
-// Earthquake Event Data
+// Earthquake Event Data from Department of Meteorology and Hydrology (DMH), Myanmar
 const QUAKE_EVENT = {
-  magnitude: 4.2,
-  region: "Mandalay, Myanmar",
-  mmt_time: "2026-10-17 08:25:52",
-  utc_time: "2026-10-17 01:55:52 UTC",
-  lat_dms: "21°59'49.2\"N",
-  lon_dms: "96°10'26.4\"E",
-  lat: 21.997000,
-  lon: 96.174000,
-  depth_km: 10.0,
-  source_name: "Thai Meteorological Department (TMD)",
-  source_url: "https://earthquake.tmd.go.th/"
+  magnitude: "4.0",
+  classification: "Slight",
+  region: "About (3) miles S-SW of Pyigyitagon, Mandalay",
+  mst_time: "2026-10-17 08:25:54 MST",
+  utc_time: "2026-10-17 01:55:54 UTC",
+  lat_dms: "21°51'36.0\"N",
+  lon_dms: "96°05'24.0\"E",
+  lat: 21.8600,
+  lon: 96.0900,
+  depth_km: 5.0,
+  source_name: "Department of Meteorology and Hydrology (DMH), Myanmar",
+  source_division: "Seismological Division, Nay Pyi Taw",
+  source_contact: "Tel: 067-3411269, Fax: 067-3411253",
+  source_url: "https://www.moezala.gov.mm/",
+  bulletin_image: "moezala.jpg"
 };
 
 // Key Settlements & Distances
 const SETTLEMENTS = [
-  { name: "Patheingyi Township", lat: 21.9880, lon: 96.1620, desc: "Immediate epicenter vicinity" },
-  { name: "Mandalay Royal Palace", lat: 21.9926, lon: 96.0964, desc: "Historic citadel & moat" },
-  { name: "Mandalay Downtown (Zegyo)", lat: 21.9750, lon: 96.0830, desc: "Commercial urban core" },
-  { name: "Amarapura (U Bein Bridge)", lat: 21.9050, lon: 96.0460, desc: "Taungthaman Lake area" },
-  { name: "Madaya", lat: 22.2030, lon: 96.1150, desc: "North of Mandalay" },
+  { name: "Pyigyitagon (Pyigyidagun)", lat: 21.9100, lon: 96.0850, desc: "Reference township (~3.4 mi NNE)" },
+  { name: "Myitnge", lat: 21.8590, lon: 96.0270, desc: "Railway town on Myitnge River" },
+  { name: "Amarapura (U Bein Bridge)", lat: 21.9050, lon: 96.0460, desc: "Taungthaman Lake / Ancient Capital" },
+  { name: "Inn Wa (Ava)", lat: 21.8600, lon: 95.9800, desc: "Historic capital at Irrawaddy/Myitnge confluence" },
   { name: "Sagaing City", lat: 21.8780, lon: 95.9790, desc: "West of Irrawaddy River, near Sagaing Fault" },
-  { name: "Pyin Oo Lwin (Maymyo)", lat: 22.0350, lon: 96.4670, desc: "Shan Plateau Highland" },
+  { name: "Tada-U", lat: 21.8150, lon: 95.9750, desc: "Southwest near Mandalay International Airport" },
+  { name: "Mandalay Downtown (Zegyo)", lat: 21.9750, lon: 96.0830, desc: "Commercial urban core" },
+  { name: "Mandalay Royal Palace", lat: 21.9926, lon: 96.0964, desc: "Historic royal citadel & moat" },
+  { name: "Patheingyi Township", lat: 21.9880, lon: 96.1620, desc: "Northeast suburban area" },
   { name: "Kyaukse", lat: 21.6040, lon: 96.1330, desc: "South Mandalay agricultural basin" }
 ];
 
@@ -246,7 +252,7 @@ class SeismicMapApp {
           <div class="epicenter-wave"></div>
           <div class="epicenter-wave delay-1"></div>
           <div class="epicenter-wave delay-2"></div>
-          <div class="epicenter-core" title="M4.2 Epicenter"></div>
+          <div class="epicenter-core" title="M${QUAKE_EVENT.magnitude} Epicenter (DMH)"></div>
         </div>
       `,
       iconSize: [50, 50],
@@ -254,20 +260,20 @@ class SeismicMapApp {
     });
 
     const popupContent = `
-      <div class="custom-popup">
+      <div class="custom-popup" style="max-width: 320px;">
         <h3>
           <span>${QUAKE_EVENT.region}</span>
-          <span class="badge">M ${QUAKE_EVENT.magnitude}</span>
+          <span class="badge">M ${QUAKE_EVENT.magnitude} (${QUAKE_EVENT.classification})</span>
         </h3>
-        <p><strong>Focal Depth:</strong> ${QUAKE_EVENT.depth_km} km (Shallow Crustal)</p>
+        <p><strong>Focal Depth:</strong> ${QUAKE_EVENT.depth_km} km (Very Shallow Crustal)</p>
         <p style="margin-top: 4px; color: #ff8597; font-weight: 500;">
-          Patheingyi Township outskirts, ~8 km NE of Mandalay Royal Palace
+          South of Mandalay, near Myitnge &amp; Amarapura
         </p>
 
         <div class="popup-specs">
           <div class="popup-spec-item">
-            <span>Date & Time (MMT)</span>
-            <span>${QUAKE_EVENT.mmt_time}</span>
+            <span>Date & Time (MST)</span>
+            <span>${QUAKE_EVENT.mst_time}</span>
           </div>
           <div class="popup-spec-item">
             <span>UTC Time</span>
@@ -275,25 +281,32 @@ class SeismicMapApp {
           </div>
           <div class="popup-spec-item">
             <span>Latitude</span>
-            <span>${QUAKE_EVENT.lat_dms} (${QUAKE_EVENT.lat.toFixed(4)}°)</span>
+            <span>${QUAKE_EVENT.lat.toFixed(2)}° N (${QUAKE_EVENT.lat_dms})</span>
           </div>
           <div class="popup-spec-item">
             <span>Longitude</span>
-            <span>${QUAKE_EVENT.lon_dms} (${QUAKE_EVENT.lon.toFixed(4)}°)</span>
+            <span>${QUAKE_EVENT.lon.toFixed(2)}° E (${QUAKE_EVENT.lon_dms})</span>
           </div>
         </div>
 
+        <div style="margin-top: 8px;">
+          <a href="${QUAKE_EVENT.bulletin_image}" target="_blank" title="Click to view full DMH announcement graphic">
+            <img src="${QUAKE_EVENT.bulletin_image}" alt="DMH Announcement" style="width: 100%; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); display: block;">
+          </a>
+        </div>
+
         <p style="font-size: 10px; color: #94a3b8; margin-top: 6px;">
-          Tectonic Setting: Central Myanmar Basin / Shan Scarp Frontal Zone adjacent to the active Sagaing Fault system.
+          Agency: ${QUAKE_EVENT.source_name}<br>
+          ${QUAKE_EVENT.source_division} (${QUAKE_EVENT.source_contact})
         </p>
         <a class="popup-link" href="${QUAKE_EVENT.source_url}" target="_blank" rel="noopener noreferrer">
-          Source: ${QUAKE_EVENT.source_name} &rarr;
+          Official Website: www.moezala.gov.mm &rarr;
         </a>
       </div>
     `;
 
     const marker = L.marker([QUAKE_EVENT.lat, QUAKE_EVENT.lon], { icon: epicenterIcon, zIndexOffset: 1000 })
-      .bindPopup(popupContent, { maxWidth: 320 });
+      .bindPopup(popupContent, { maxWidth: 340 });
 
     this.layers.epicenter = L.layerGroup([marker]).addTo(this.map);
 
@@ -306,7 +319,7 @@ class SeismicMapApp {
   renderImpactRings() {
     const rings = [];
 
-    // 10 km ring: Near-field / Strongest felt motion (MMI IV)
+    // 10 km ring: Near-field / Strongest felt motion
     const ring10 = L.circle([QUAKE_EVENT.lat, QUAKE_EVENT.lon], {
       radius: 10000,
       color: '#ff4757',
@@ -315,9 +328,9 @@ class SeismicMapApp {
       fillColor: '#ff4757',
       fillOpacity: 0.12,
       dashArray: '4, 4'
-    }).bindTooltip("<strong>10 km Zone</strong><br>Epicentral Area (Light-Moderate Shaking)", { sticky: true });
+    }).bindTooltip("<strong>10 km Zone</strong><br>Epicentral Area (Pyigyitagon, Amarapura, Myitnge)", { sticky: true });
 
-    // 25 km ring: Felt tremor zone (MMI III)
+    // 25 km ring: Noticeable tremor zone
     const ring25 = L.circle([QUAKE_EVENT.lat, QUAKE_EVENT.lon], {
       radius: 25000,
       color: '#ffa502',
@@ -326,9 +339,9 @@ class SeismicMapApp {
       fillColor: '#ffa502',
       fillOpacity: 0.05,
       dashArray: '6, 6'
-    }).bindTooltip("<strong>25 km Zone</strong><br>Noticeable Shaking (Mandalay Metro & Amarapura)", { sticky: true });
+    }).bindTooltip("<strong>25 km Zone</strong><br>Noticeable Shaking (Mandalay Core, Sagaing, Tada-U, Inn Wa)", { sticky: true });
 
-    // 50 km ring: Perceptible limit (MMI II)
+    // 50 km ring: Perceptible limit
     const ring50 = L.circle([QUAKE_EVENT.lat, QUAKE_EVENT.lon], {
       radius: 50000,
       color: '#38bdf8',
@@ -337,7 +350,7 @@ class SeismicMapApp {
       fillColor: '#38bdf8',
       fillOpacity: 0.02,
       dashArray: '8, 8'
-    }).bindTooltip("<strong>50 km Zone</strong><br>Perceptible Outer Limit (Pyin Oo Lwin, Sagaing, Kyaukse)", { sticky: true });
+    }).bindTooltip("<strong>50 km Zone</strong><br>Perceptible Outer Limit (Kyaukse, Patheingyi)", { sticky: true });
 
     rings.push(ring10, ring25, ring50);
     this.layers.rings = L.layerGroup(rings).addTo(this.map);
@@ -734,10 +747,10 @@ class SeismicMapApp {
         this.map.flyTo([QUAKE_EVENT.lat, QUAKE_EVENT.lon], 11, { duration: 1.2 });
         break;
       case 'mandalay':
-        this.map.flyTo([21.98, 96.12], 10, { duration: 1.2 });
+        this.map.flyTo([21.88, 96.06], 10, { duration: 1.2 });
         break;
       case 'belt':
-        this.map.flyTo([21.9, 96.1], 8, { duration: 1.5 });
+        this.map.flyTo([21.85, 96.05], 8, { duration: 1.5 });
         break;
       case 'country':
         if (this.layers.faults) {

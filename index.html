@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mandalay Earthquake (M4.2) & Myanmar Tectonic Web Map</title>
+  <title>Mandalay Earthquake (M4.0) & Myanmar Tectonic Web Map</title>
   
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -30,8 +30,8 @@
         <div class="brand-titles">
           <h1>Myanmar Seismotectonic Observatory</h1>
           <p>
-            <span>M4.2 Mandalay Earthquake</span>
-            <span class="live-badge"><span class="dot"></span>Event Logged</span>
+            <span>M4.0 Mandalay Earthquake (DMH)</span>
+            <span class="live-badge"><span class="dot"></span>DMH Verified</span>
           </p>
         </div>
       </div>
@@ -85,36 +85,50 @@
         <section class="card">
           <div class="event-hero">
             <div class="mag-pill">
-              <span class="mag-val">4.2</span>
-              <span class="mag-lbl">MAGNITUDE</span>
+              <span class="mag-val">4.0</span>
+              <span class="mag-lbl">SLIGHT</span>
             </div>
             <div class="event-headline">
-              <h3>Mandalay, Myanmar</h3>
-              <div class="event-tag">⚠️ Shallow Crustal Event (10 km)</div>
-              <div class="event-agency">Source: Thai Meteorological Dept. (TMD)</div>
+              <h3>S-SW of Pyigyitagon, Mandalay</h3>
+              <div class="event-tag">⚠️ Very Shallow Event (5 km)</div>
+              <div class="event-agency">Dept. of Meteorology &amp; Hydrology (DMH)</div>
             </div>
           </div>
 
           <div class="data-grid">
             <div class="data-item">
-              <div class="data-item-label">Myanmar Time (MMT)</div>
-              <div class="data-item-val">2026-10-17 08:25:52</div>
+              <div class="data-item-label">Myanmar Standard Time (MST)</div>
+              <div class="data-item-val">2026-10-17 08:25:54</div>
             </div>
             <div class="data-item">
               <div class="data-item-label">UTC Time</div>
-              <div class="data-item-val">2026-10-17 01:55:52</div>
+              <div class="data-item-val">2026-10-17 01:55:54</div>
             </div>
             <div class="data-item">
-              <div class="data-item-label">Epicenter Coordinates</div>
-              <div class="data-item-val highlight">21°59'49.2"N 96°10'26.4"E</div>
+              <div class="data-item-label">Coordinates (DMH)</div>
+              <div class="data-item-val highlight">21.86° N, 96.09° E</div>
             </div>
             <div class="data-item">
-              <div class="data-item-label">Decimal Coordinates</div>
-              <div class="data-item-val">21.9970°N, 96.1740°E</div>
+              <div class="data-item-label">DMS Coordinates</div>
+              <div class="data-item-val">21°51'36"N, 96°05'24"E</div>
             </div>
             <div class="data-item full-width">
-              <div class="data-item-label">Focal Depth</div>
-              <div class="data-item-val">10.0 km &bull; Shallow focal depth, high local perceptibility</div>
+              <div class="data-item-label">Focal Depth &amp; Location</div>
+              <div class="data-item-val">5.0 km &bull; About (3) miles S-SW of Pyigyitagon, Mandalay</div>
+            </div>
+          </div>
+
+          <!-- Official DMH Bulletin Graphic Preview -->
+          <div style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+            <div style="font-size: 10px; font-weight: 600; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">
+              Official DMH Announcement Graphic
+            </div>
+            <a href="moezala.jpg" target="_blank" title="Click to view full DMH announcement graphic">
+              <img src="moezala.jpg" alt="DMH Announcement Graphic" style="width: 100%; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); display: block;">
+            </a>
+            <div style="font-size: 10px; color: #94a3b8; margin-top: 6px; display: flex; justify-content: space-between;">
+              <span>Seismological Division, Nay Pyi Taw</span>
+              <a href="https://www.moezala.gov.mm/" target="_blank" style="color: #38bdf8; text-decoration: none;">moezala.gov.mm &rarr;</a>
             </div>
           </div>
 
@@ -126,7 +140,7 @@
               <line x1="12" y1="17" x2="12.01" y2="17"></line>
             </svg>
             <div class="fault-proximity-content">
-              <h4>Nearest Lineament: <span id="nearest-fault-dist">3.22 km</span></h4>
+              <h4>Nearest Lineament: <span id="nearest-fault-dist">10.77 km</span></h4>
               <p id="nearest-fault-desc">Calculated to nearest lineament trace from Myanmar_Tectonic_Map_2011.geojson.</p>
             </div>
           </div>
@@ -279,11 +293,11 @@
     <div class="bottom-info-pill">
       <div class="coord-display">
         <span>Cursor:</span>
-        <span id="mouse-coord" class="coord-val">21.9970°N, 96.1740°E</span>
+        <span id="mouse-coord" class="coord-val">21.8600°N, 96.0900°E</span>
       </div>
       <div style="color: rgba(255,255,255,0.2);">|</div>
       <div style="color: var(--text-dim);">
-        Epicenter: <span style="color:#ff6b81; font-weight:600;">21.9970°N, 96.1740°E</span>
+        Epicenter (DMH): <span style="color:#ff6b81; font-weight:600;">21.8600°N, 96.0900°E</span>
       </div>
     </div>
 
