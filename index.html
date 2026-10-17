@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandalay Earthquake & Tectonic Map</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+        /* Info Panel Styling */
+        .info-panel {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            line-height: 1.5;
+            color: #333;
+            max-width: 280px;
+        }
+        .info-panel h3 {
+            margin: 0 0 8px 0;
+            color: #d9534f;
+            font-size: 16px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 4px;
+        }
+        /* Legend Styling */
+        .legend {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 13px;
+            line-height: 22px;
+        }
+        .legend i {
+            width: 18px;
+            height: 3px;
+            float: left;
+            margin-right: 8px;
+            margin-top: 9px;
+        }
+        .legend .circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-top: 5px;
+            border: 2px solid #fff;
+            box-shadow: 0 0 4px #ff0000;
+        }
+        /* Pulsing Epicenter Animation */
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2.8); opacity: 0; }
+        }
+        .pulse-ring {
+            border: 3px solid #ff0000;
+            border-radius: 50%;
+            height: 24px;
+            width: 24px;
+            position: absolute;
+            left: -6px;
+            top: -6px;
+            animation: pulse 1.8s infinite;
+            pointer-events: none;
+        }
+        .epicenter-dot {
+            background-color: #ff0000;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            height: 14px;
+            width: 14px;
+            position: relative;
+            box-shadow: 0 0 6px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // 1. Earthquake Details
+    const eqData = {
+        region: "Mandalay, Myanmar",
+        magnitude: 4.2,
+        time: "2026-10-17 08:25:52 (MMT)",
+        dms: "21°59'49.2\"N 96°10'26.4\"E",
+        lat: 21.9970, // 21 + 59/60 + 49.2/3600
+        lng: 96.1740, // 96 + 10/60 + 26.4/3600
+        depth: "10 km",
+        source: "https://earthquake.tmd.go.th/"
+    };
+
+    // 2. Initialize Map centered near Mandalay
+    const map = L.map('map').setView([eqData.lat, eqData.lng], 8);
+
+    // 3. Base Layers
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    });
+
+    const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap'
+    });
+
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri'
+    });
+
+    osmLayer.addTo(map);
+
+    // 4. Create Custom Pulsing Icon for Epicenter
+    const pulsingIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: '<div class="pulse-ring"></div><div class="epicenter-dot"></div>',
+        iconSize: [18, 18],
+        iconAnchor: [9, 9]
+    });
+
+    const eqMarker = L.marker([eqData.lat, eqData.lng], { icon: pulsingIcon }).addTo(map);
+    
+    const popupContent = `
+        <div style="font-size: 13px; line-height: 1.6;">
+            <strong style="font-size: 15px; color: #d9534f;">M ${eqData.magnitude} Earthquake</strong><br>
+            <b>Region:</b> ${eqData.region}<br>
+            <b>Time (MMT):</b> ${eqData.time}<br>
+            <b>Epicenter:</b> ${eqData.dms}<br>
+            <b>Decimal:</b> ${eqData.lat.toFixed(4)}°N, ${eqData.lng.toFixed(4)}°E<br>
+            <b>Depth:</b> ${eqData.depth}<br>
+            <b>Source:</b> <a href="${eqData.source}" target="_blank">TMD Earthquake</a>
+        </div>
+    `;
+    eqMarker.bindPopup(popupContent).openPopup();
+
+    // 5. Load Tectonic Lineaments with Uniform Styling
+    const faultLayerGroup = L.layerGroup().addTo(map);
+
+    const uniformFaultStyle = {
+        color: "#d95f02",
+        weight: 2.2,
+        opacity: 0.85
+    };
+
+    // Only bind a popup if the feature actually has non-null label properties
+    function onEachFault(feature, layer) {
+        if (feature.properties) {
+            const { NAME, SEGMENT, TYPE_DESCR, CODE } = feature.properties;
+            const details = [];
+            if (NAME) details.push(`<b>Name:</b> ${NAME}`);
+            if (SEGMENT) details.push(`<b>Segment:</b> ${SEGMENT}`);
+            if (TYPE_DESCR) details.push(`<b>Type:</b> ${TYPE_DESCR}`);
+            if (CODE) details.push(`<b>Code:</b> ${CODE}`);
+            
+            if (details.length > 0) {
+                layer.bindPopup(`<div style="font-size: 13px; line-height: 1.5;">${details.join('<br>')}</div>`);
+            }
+        }
+    }
+
+    fetch('Myanmar_Tectonic_Map_2011.geojson')
+        .then(response => {
+            if (!response.ok) throw new Error("Could not load GeoJSON file");
+            return response.json();
+        })
+        .then(data => {
+            L.geoJSON(data, {
+                style: uniformFaultStyle,
+                onEachFeature: onEachFault
+            }).addTo(faultLayerGroup);
+        })
+        .catch(err => {
+            console.warn("External file fetch failed. Ensure you are running a local server or embed the GeoJSON object directly.", err);
+        });
+
+    // 6. Layer Control
+    const baseMaps = {
+        "OpenStreetMap": osmLayer,
+        "Topographic Map": topoLayer,
+        "Satellite Imagery": satelliteLayer
+    };
+
+    const overlayMaps = {
+        "Earthquake Epicenter": eqMarker,
+        "Tectonic Lineaments (2011)": faultLayerGroup
+    };
+
+    L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+
+    // 7. Info Panel (Bottom-Left)
+    const infoControl = L.control({ position: 'bottomleft' });
+    infoControl.onAdd = function () {
+        const div = L.DomUtil.create('div', 'info-panel');
+        div.innerHTML = `
+            <h3>Earthquake Summary</h3>
+            <b>Region:</b> ${eqData.region}<br>
+            <b>Magnitude:</b> ${eqData.magnitude}<br>
+            <b>Depth:</b> ${eqData.depth}<br>
+            <b>Time:</b> ${eqData.time}<br>
+            <b>Coords:</b> ${eqData.dms}
+        `;
+        return div;
+    };
+    infoControl.addTo(map);
+
+    // 8. Map Legend (Bottom-Right)
+    const legendControl = L.control({ position: 'bottomright' });
+    legendControl.onAdd = function () {
+        const div = L.DomUtil.create('div', 'legend');
+        div.innerHTML = `
+            <strong>Legend</strong><br>
+            <i class="circle" style="background: #ff0000;"></i> Epicenter (M 4.2)<br>
+            <i style="background: #d95f02;"></i> Tectonic Lineament / Fault
+        `;
+        return div;
+    };
+    legendControl.addTo(map);
+</script>
+
+</body>
+</html>
